@@ -1,0 +1,16 @@
+﻿@model Beruwala_Mirror.Models.News.NewsModel
+
+<div class="card" style="width: 60rem;">
+    <img src=" @Url.Content("~/Imgs/" + Model.MainImg)" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>
+        <p class="card-text">@Html.DisplayFor(m => m.NewsBody)</p>
+    </div>
+    @foreach (var img in Model.Images)
+    {
+        <div class="row float-left">
+            <img src=" @Url.Content("~/Imgs/" + img)" class="card-img-bottom" alt="...">
+        </div>
+    }
+
+</div>

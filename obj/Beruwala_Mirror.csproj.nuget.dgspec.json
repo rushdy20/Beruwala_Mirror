@@ -1,0 +1,79 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Learning\\Beruwala_Mirror\\Beruwala.Mirror\\Beruwala_Mirror\\Beruwala_Mirror.csproj": {}
+  },
+  "projects": {
+    "C:\\Learning\\Beruwala_Mirror\\Beruwala.Mirror\\Beruwala_Mirror\\Beruwala_Mirror.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Learning\\Beruwala_Mirror\\Beruwala.Mirror\\Beruwala_Mirror\\Beruwala_Mirror.csproj",
+        "projectName": "Beruwala_Mirror",
+        "projectPath": "C:\\Learning\\Beruwala_Mirror\\Beruwala.Mirror\\Beruwala_Mirror\\Beruwala_Mirror.csproj",
+        "packagesPath": "C:\\Users\\C62738A\\.nuget\\packages\\",
+        "outputPath": "C:\\Learning\\Beruwala_Mirror\\Beruwala.Mirror\\Beruwala_Mirror\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\C62738A\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Learning\\Amazon.AspNetCore.Identity.Cognito.1.0.3.nupkg": {},
+          "C:\\Learning\\WebAdvertApi\\AdvertApi.Models\\bin\\Debug": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://ecs.jfrog.io/ecs/api/nuget/corvetteuk-dotnet-nuget-virtual": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.9.10, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

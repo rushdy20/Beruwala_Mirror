@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beruwala_Mirror", "Beruwala_Mirror.csproj", "{D6B6F093-A7FC-4B18-8217-C9FD9E4B6FEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6B6F093-A7FC-4B18-8217-C9FD9E4B6FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6B6F093-A7FC-4B18-8217-C9FD9E4B6FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6B6F093-A7FC-4B18-8217-C9FD9E4B6FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6B6F093-A7FC-4B18-8217-C9FD9E4B6FEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AED6B7F2-BB4F-485A-AD5A-3B51C1DF6BFE}
+	EndGlobalSection
+EndGlobal
