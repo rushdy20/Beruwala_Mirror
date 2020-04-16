@@ -70,7 +70,12 @@ namespace Beruwala_Mirror.Controllers
                 var password = collection["Password"];
                 var user = IsValidUser(email, password);
 
-                return RedirectToAction("News","Admin",user);
+                if (string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
+                {
+                   HttpContext.Session.SetString("Name",user.Name);
+                }
+                
+                return RedirectToAction("News","Admin");
             }
             catch (Exception ex)
             {

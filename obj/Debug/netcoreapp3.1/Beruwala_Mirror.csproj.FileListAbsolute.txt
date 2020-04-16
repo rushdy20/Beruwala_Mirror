@@ -227,3 +227,4 @@ C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.csproj.CopyComplete
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.dll
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.pdb
+C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.csprojAssemblyReference.cache

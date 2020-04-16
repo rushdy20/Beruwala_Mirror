@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Beruwala_Mirror.Models.News;
 using Beruwala_Mirror.Models.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,18 @@ namespace Beruwala_Mirror.Controllers
             return View();
         }
 
-        // GET: Admin/Create
-        [HttpPost]
-        public ActionResult News(UserModel user)
+      
+        public ActionResult News()
         {
-            return View();
+            if(HttpContext.Session.GetString("Name") == null)
+                return RedirectToAction("Create", "News");
+
+            var model = new NewsModel
+            {
+                CreatedBy = HttpContext.Session.GetString("Name"),
+                CreatedDate = DateTime.Today.ToShortDateString()
+            };
+            return View(model);
         }
 
         

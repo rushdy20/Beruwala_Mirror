@@ -1,7 +1,26 @@
-﻿
+﻿@model Beruwala_Mirror.Models.News.NewsModel
 @{
-    ViewData["Title"] = "News";
+    ViewData["Title"] = "Create new News feed";
 }
 
-<h1>News</h1>
+    <h1>Create a new news feed</h1>
 
+    <form>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Heading)
+            @Html.TextBoxFor(m => m.Heading, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.NewsBody)
+            @Html.TextAreaFor(m => m.NewsBody, new { rows = "10", @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlFile1">Example file input</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+        </div>
+        <div class="form-group">
+            <small id="emailHelp" class="form-text text-muted">Created By :   @Model.CreatedBy   Created On :  @Model.CreatedDate </small>
+        </div>
+        
+
+</form>
