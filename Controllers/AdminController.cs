@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Beruwala_Mirror.Models.Admin;
 using Beruwala_Mirror.Models.News;
-using Beruwala_Mirror.Models.Users;
+using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,15 @@ namespace Beruwala_Mirror.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly IFileUploader _fileUploader;
+        private const string newsPath = @"News";
+        private const string newsItems = @"News/NewsItems";
+
+        public AdminController(IFileUploader fileUploader)
+        {
+            _fileUploader = fileUploader;
+        }
+
         // GET: Admin
         public ActionResult Index()
         {
@@ -23,13 +33,12 @@ namespace Beruwala_Mirror.Controllers
             return View();
         }
 
-      
         public ActionResult News()
         {
-            if(HttpContext.Session.GetString("Name") == null)
+            if (HttpContext.Session.GetString("Name") == null)
                 return RedirectToAction("Create", "News");
 
-            var model = new NewsModel
+            var model = new CreateNewsViewModel
             {
                 CreatedBy = HttpContext.Session.GetString("Name"),
                 CreatedDate = DateTime.Today.ToShortDateString()
@@ -37,7 +46,91 @@ namespace Beruwala_Mirror.Controllers
             return View(model);
         }
 
-        
+        [HttpPost]
+        public async Task<ActionResult> News(CreateNewsViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.Heading))
+                RedirectToAction("News");
+
+            var newsId = Guid.NewGuid().ToString();
+            var folderPath = CreateFolder(newsId);
+            var newsmodel = new NewsModel
+            {
+                Id = newsId,
+                CreatedBy = HttpContext.Session.GetString("Name"),
+                CreatedDate = DateTime.Today,
+                Heading = model.Heading,
+                NewsBody = model.NewsBody,
+                YouTubLink = model.YouTubLink ?? string.Empty
+            };
+            var stringImages = new List<string>();
+
+            if (model.MainImage != null)
+            {
+                stringImages.Add(model.MainImage.FileName);
+                using (var readStream = model.MainImage.OpenReadStream())
+                {
+                    var result = await _fileUploader.UploadFileAsync($@"{folderPath}/{model.MainImage.FileName}", readStream)
+                        .ConfigureAwait(false);
+
+                    if (!result)
+                        throw new Exception($"Could not upload the image to file repository. Please see the logs for details.");
+                }
+            }
+
+            if (model.SubImage1 != null)
+            {
+                stringImages.Add(model.SubImage1.FileName);
+                using (var readStream = model.SubImage1.OpenReadStream())
+                {
+                    var result = await _fileUploader.UploadFileAsync($@"{folderPath}/{model.SubImage1.FileName}", readStream)
+                        .ConfigureAwait(false);
+
+                    if (!result)
+                        throw new Exception($"Could not upload the image to file repository. Please see the logs for details.");
+                }
+            }
+
+            if (model.SubImage2 != null)
+            {
+                stringImages.Add(model.SubImage2.FileName);
+
+                using (var readStream = model.SubImage2.OpenReadStream())
+                {
+                    var result = await _fileUploader.UploadFileAsync($@"{folderPath}/{model.SubImage2.FileName}", readStream)
+                        .ConfigureAwait(false);
+
+                    if (!result)
+                        throw new Exception("Could not upload the image to file repository. Please see the logs for details.");
+                }
+            }
+
+            if (model.SubImage3 != null)
+            {
+                stringImages.Add(model.SubImage3.FileName);
+
+                using (var readStream = model.SubImage3.OpenReadStream())
+                {
+                    var result = await _fileUploader.UploadFileAsync($@"{folderPath}/{model.SubImage3.FileName}", readStream)
+                        .ConfigureAwait(false);
+
+                    if (!result)
+                        throw new Exception("Could not upload the image to file repository. Please see the logs for details.");
+                }
+            }
+
+            newsmodel.Images = stringImages;
+
+            var jsonString = JsonSerializer.Serialize(newsmodel);
+
+            var isSaved = await _fileUploader.SaveFileAsync($@"{newsItems}/{newsmodel.Id + ".json"}", jsonString)
+                .ConfigureAwait(false);
+
+            if (!isSaved)
+                throw new Exception("Could not upload the image to file repository. Please see the logs for details.");
+
+            return RedirectToAction("index", "Home");
+        }
 
         // POST: Admin/Create
         [HttpPost]
@@ -100,6 +193,12 @@ namespace Beruwala_Mirror.Controllers
             {
                 return View();
             }
+        }
+
+        private string CreateFolder(string newsId)
+        {
+            var dateFolder = DateTime.Today.ToString("dd-MM-yyy");
+            return $@"{newsPath}/{dateFolder}/{newsId}";
         }
     }
 }

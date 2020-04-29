@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v3.1": {
       "Beruwala_Mirror/1.0.0": {
         "dependencies": {
+          "AWSSDK.S3": "3.3.110.56",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.9.10",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.1.1",
           "Microsoft.AspNetCore.Antiforgery": "3.1.0.0",
@@ -314,6 +315,31 @@
         },
         "compile": {
           "Beruwala_Mirror.dll": {}
+        }
+      },
+      "AWSSDK.Core/3.3.106.10": {
+        "runtime": {
+          "lib/netstandard2.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.3.106.10"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/AWSSDK.Core.dll": {}
+        }
+      },
+      "AWSSDK.S3/3.3.110.56": {
+        "dependencies": {
+          "AWSSDK.Core": "3.3.106.10"
+        },
+        "runtime": {
+          "lib/netstandard2.0/AWSSDK.S3.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.3.110.56"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/AWSSDK.S3.dll": {}
         }
       },
       "Microsoft.AspNetCore.Html.Abstractions/2.2.0": {
@@ -3236,6 +3262,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AWSSDK.Core/3.3.106.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YKGpC9nu42zC5eZCWxP1vtzTDx1iJEIrY0TKAe2otRIYVk8na6TvGErTEhQb7sKnMPNEwt1bE9CSqnYp9WKAWQ==",
+      "path": "awssdk.core/3.3.106.10",
+      "hashPath": "awssdk.core.3.3.106.10.nupkg.sha512"
+    },
+    "AWSSDK.S3/3.3.110.56": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M90+pDYC8saRxeXYPntNF2tHp97LDHg1bXdfP4/JfcKhvI278rVFSGa/z7skVMIXcTfp7oxtHvpNHJ5wlf/cMA==",
+      "path": "awssdk.s3/3.3.110.56",
+      "hashPath": "awssdk.s3.3.3.110.56.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Html.Abstractions/2.2.0": {
       "type": "package",

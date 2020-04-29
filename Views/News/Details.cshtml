@@ -1,15 +1,27 @@
 ﻿@model Beruwala_Mirror.Models.News.NewsModel
 
 <div class="card" style="width: 60rem;">
-    <img src=" @Url.Content("~/Imgs/" + Model.MainImg)" class="card-img-top" alt="...">
+    <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + Model.MainImg})" class="card-img-top",  alt="...">
+
     <div class="card-body">
         <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>
         <p class="card-text">@Html.DisplayFor(m => m.NewsBody)</p>
     </div>
+
+    @if (Model.YouTubLink.Trim().Length > 1)
+    {
+        <div class="margin-15">
+            <iframe width="560" height="315" src=@Model.YouTubLink sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"></iframe>
+
+        </div>
+    }
+
     @foreach (var img in Model.Images)
     {
-        <div class="row float-left">
-            <img src=" @Url.Content("~/Imgs/" + img)" class="card-img-bottom" alt="...">
+        <div class="row float-left margin-15">
+
+            <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + img})" class="card-img-top"  alt="...">
+
         </div>
     }
 

@@ -1,26 +1,48 @@
-﻿@model Beruwala_Mirror.Models.News.NewsModel
+﻿@model Beruwala_Mirror.Models.Admin.CreateNewsViewModel
 @{
     ViewData["Title"] = "Create new News feed";
 }
 
-    <h1>Create a new news feed</h1>
+<h1>Create a new news feed</h1>
 
-    <form>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Heading)
-            @Html.TextBoxFor(m => m.Heading, new { @class = "form-control" })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.NewsBody)
-            @Html.TextAreaFor(m => m.NewsBody, new { rows = "10", @class = "form-control" })
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlFile1">Example file input</label>
-            <input type="file" class="form-control-file" id="exampleFormControlFile1">
-        </div>
-        <div class="form-group">
-            <small id="emailHelp" class="form-text text-muted">Created By :   @Model.CreatedBy   Created On :  @Model.CreatedDate </small>
-        </div>
-        
+@using (Html.BeginForm("News", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
 
-</form>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Heading)
+        @Html.TextBoxFor(m => m.Heading, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewsBody)
+        @Html.TextAreaFor(m => m.NewsBody, new { rows = "10", @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MainImage)
+        @Html.TextBoxFor(m => m.MainImage, new { Type = "file" })
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SubImage1)
+        @Html.TextBoxFor(m => m.SubImage1, new { Type = "file" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SubImage2)
+        @Html.TextBoxFor(m => m.SubImage2, new { Type = "file" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SubImage3)
+        @Html.TextBoxFor(m => m.SubImage3, new { Type = "file" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.YouTubLink)
+        @Html.TextBoxFor(m => m.YouTubLink, new { @class = "form-control" })
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-group">
+        <small id="emailHelp" class="form-text text-muted">Created By :   @Model.CreatedBy   Created On :  @Model.CreatedDate </small>
+    </div>
+
+
+}

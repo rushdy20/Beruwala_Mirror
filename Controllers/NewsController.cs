@@ -1,53 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Beruwala_Mirror.Models.News;
 using Beruwala_Mirror.Models.Users;
-using Microsoft.AspNetCore.Hosting;
+using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Beruwala_Mirror.Controllers
 {
     public class NewsController : Controller
     {
-        private const string userFilePath = @"\Imgs\users.json";
-        private readonly IWebHostEnvironment _env;
+        private const string userFilePath = @"News/users.json";
+
+        private readonly IFileUploader _fileUploader;
+
         // GET: News
 
-        public NewsController(IWebHostEnvironment env)
+        public NewsController(IFileUploader fileUploader)
         {
-            _env = env;
+            _fileUploader = fileUploader;
         }
+
         public ActionResult Index()
         {
-            var model = new NewsViewModel
-            {
-                News = new List<NewsModel>
-                {
-                    new NewsModel {Heading = "heading-1", NewsBody = "adsf adsfas asdf ads asdfasd asdf  asdfasdf asdfasd asdfdas  asdfasdfadsfadsasdf", Id="abc"},
-                    new NewsModel {Heading = "heading-2", NewsBody = "adsf adsfas asdf ads asdfasd asdf  asdfasdf asdfasd asdfdas  asdfasdfadsfadsasdf", Id="abc"},
-                    new NewsModel {Heading = "heading-3", NewsBody = "adsf adsfas asdf ads asdfasd asdf  asdfasdf asdfasd asdfdas  asdfasdfadsfadsasdf", Id="abc"},
-                    new NewsModel {Heading = "heading-4", NewsBody = "adsf adsfas asdf ads asdfasd asdf  asdfasdf asdfasd asdfdas  asdfasdfadsfadsasdf", Id="abc"},
-                    new NewsModel {Heading = "heading-5", NewsBody = "adsf adsfas asdf ads asdfasd asdf  asdfasdf asdfasd asdfdas  asdfasdfadsfadsasdf", Id="abc"}
-                }
-            };
-            return View(model);
+            return RedirectToAction("Create");
         }
 
         // GET: News/Details/5
-        public ActionResult Details(string id)
+        public async Task<ActionResult> Details(string id)
         {
-            var model = new NewsModel
-            {
-                Heading = "heading-1",
-                NewsBody = "adsf adsfas asdf ads asdfasd asdf  asdfasdf asdfasd asdfdas  asdfasdfadsfadsasdf",
-                MainImg = "sample.jfif",
-                Images = new List<string> {"sample.jfif", "sample.jfif", "sample.jfif"}
-            };
+            var model = await GetNews(id);
             return View(model);
         }
 
@@ -62,20 +46,17 @@ namespace Beruwala_Mirror.Controllers
         // POST: News/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
             {
                 var email = collection["EmailAddress"];
                 var password = collection["Password"];
-                var user = IsValidUser(email, password);
+                var user = await IsValidUser(email, password);
 
-                if (string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
-                {
-                   HttpContext.Session.SetString("Name",user.Name);
-                }
-                
-                return RedirectToAction("News","Admin");
+                if (string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)) HttpContext.Session.SetString("Name", user.Name);
+
+                return RedirectToAction("News", "Admin");
             }
             catch (Exception ex)
             {
@@ -97,7 +78,7 @@ namespace Beruwala_Mirror.Controllers
             try
             {
                 // TODO: Add update logic here
-             
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -120,7 +101,7 @@ namespace Beruwala_Mirror.Controllers
             try
             {
                 // TODO: Add delete logic here
-               
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -129,18 +110,34 @@ namespace Beruwala_Mirror.Controllers
             }
         }
 
-        private UserModel IsValidUser(string email, string password)
+        private async Task<UserModel> IsValidUser(string email, string password)
         {
-            string webRootPath = _env.WebRootPath;
-            string json =System.IO. File.ReadAllText(webRootPath + userFilePath);
-            var  users = JsonConvert.DeserializeObject<AdminUsers>(json);
+            var json = await _fileUploader.GetFileFromS3(userFilePath);
+            var users = JsonConvert.DeserializeObject<AdminUsers>(json);
 
-            if (users.Users.Any(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase) &&  string.Equals(u.Password, password, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                return users.Users.First(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase) && string.Equals(u.Password, password, StringComparison.CurrentCultureIgnoreCase));
-            }
-            
+            if (users.Users.Any(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase) && string.Equals(u.Password, password, StringComparison.CurrentCultureIgnoreCase)))
+                return users.Users.First(
+                    u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase) && string.Equals(u.Password, password, StringComparison.CurrentCultureIgnoreCase));
+
             return new UserModel();
+        }
+
+        private async Task<NewsModel> GetNews(string newsId)
+        {
+            var model = new NewsModel();
+            try
+            {
+                var responseBody = await _fileUploader.GetFileFromS3(@"News/NewsItems/" + newsId + ".json");
+                var newsModel = JsonConvert.DeserializeObject<NewsModel>(responseBody);
+                newsModel.MainImg = newsModel.Images.FirstOrDefault();
+                model = newsModel;
+            }
+            catch (Exception ex)
+            {
+                //ignore 
+            }
+
+            return model;
         }
     }
 }

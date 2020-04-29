@@ -19,9 +19,12 @@ namespace Beruwala_Mirror.Models.News
         public string NewsBody { get; set; }
 
         [Display(Name = "Created Date")]
-        public string CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }
+
+        [Display(Name = "YouTub Link")]
+        public string YouTubLink { get; set; }
     }
 }

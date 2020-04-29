@@ -69,3 +69,12 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.NewNewsFeedSeperator {
+    clear: both;
+    margin-bottom: 15px;
+    font-weight: bold;
+    margin-top: 15px
+}
+.margin-15 {
+    margin: 15px;
+}

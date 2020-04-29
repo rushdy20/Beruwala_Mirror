@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,7 @@ namespace Beruwala_Mirror
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);//Session Timeout.  
             });
+            services.AddTransient<IFileUploader, S3FileUploader>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
