@@ -78,3 +78,12 @@ body {
 .margin-15 {
     margin: 15px;
 }
+.logo.position {
+    max-height: 300px;
+    max-width: 50%
+}
+
+.card.size {
+    width: 25rem;
+    height: 30rem;
+}

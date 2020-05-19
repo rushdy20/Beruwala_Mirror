@@ -26,5 +26,7 @@ namespace Beruwala_Mirror.Models.News
 
         [Display(Name = "YouTub Link")]
         public string YouTubLink { get; set; }
+
+        public int NumberOfVisits { get; set; }
     }
 }

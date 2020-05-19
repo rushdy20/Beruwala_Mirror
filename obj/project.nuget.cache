@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "z/Nttm1tBn2raqv1xUGmwHDO/MEJzTtzoD7gYE4jGjC0+xIJYWTWEA7IcTK7GKA4ZjwUSWBBcwCuaeSlwa7pcQ==",
+  "dgSpecHash": "4x09UFKVQbLPrjtwL8PdJYvlFsHU+kcnVvnfQ5c5z1v62Rv1cot43y19p0IjBSEvyvaSRHzLRuHksw3+QUr3jA==",
   "success": true,
   "projectFilePath": "C:\\Learning\\Beruwala_Mirror\\Beruwala.Mirror\\Beruwala_Mirror\\Beruwala_Mirror.csproj",
   "expectedPackageFiles": [
@@ -113,7 +113,19 @@
     "C:\\Users\\C62738A\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.3\\system.threading.tasks.extensions.4.5.3.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\C62738A\\.nuget\\packages\\whatsapp.net\\1.2.2\\whatsapp.net.1.2.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Whatsapp.NET 1.2.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "Whatsapp.NET",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

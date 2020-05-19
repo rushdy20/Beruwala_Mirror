@@ -7,12 +7,14 @@ using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Beruwala_Mirror.Controllers
 {
     public class NewsController : Controller
     {
         private const string userFilePath = @"News/users.json";
+        private const string newsItems = @"News/NewsItems";
 
         private readonly IFileUploader _fileUploader;
 
@@ -32,6 +34,12 @@ namespace Beruwala_Mirror.Controllers
         public async Task<ActionResult> Details(string id)
         {
             var model = await GetNews(id);
+
+            ViewBag.LoggedIn = false;
+            if (HttpContext.Session.GetString("Name") != null)
+            {
+                ViewBag.LoggedIn = true;
+            }
             return View(model);
         }
 
@@ -131,6 +139,8 @@ namespace Beruwala_Mirror.Controllers
                 var newsModel = JsonConvert.DeserializeObject<NewsModel>(responseBody);
                 newsModel.MainImg = newsModel.Images.FirstOrDefault();
                 model = newsModel;
+               var update = await UpdateVisits(model);
+
             }
             catch (Exception ex)
             {
@@ -138,6 +148,18 @@ namespace Beruwala_Mirror.Controllers
             }
 
             return model;
+        }
+
+        private async Task<bool> UpdateVisits(NewsModel model)
+        {
+            model.NumberOfVisits++;
+            var jsonString = JsonSerializer.Serialize(model);
+
+            var isSaved = await _fileUploader.SaveFileAsync($@"{newsItems}/{model.Id + ".json"}", jsonString)
+                .ConfigureAwait(false);
+
+            return true;
+
         }
     }
 }

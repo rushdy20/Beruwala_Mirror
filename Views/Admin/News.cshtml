@@ -7,7 +7,7 @@
 
 @using (Html.BeginForm("News", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-
+    @Html.HiddenFor(m => m.Id)
     <div class="form-group">
         @Html.LabelFor(m => m.Heading)
         @Html.TextBoxFor(m => m.Heading, new { @class = "form-control" })

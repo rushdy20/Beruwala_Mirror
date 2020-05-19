@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using Beruwala_Mirror.Models.Admin;
 using Beruwala_Mirror.Models.News;
 using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Beruwala_Mirror.Controllers
 {
@@ -33,16 +35,24 @@ namespace Beruwala_Mirror.Controllers
             return View();
         }
 
-        public ActionResult News()
+        public async Task<ActionResult> News(string id)
         {
             if (HttpContext.Session.GetString("Name") == null)
                 return RedirectToAction("Create", "News");
 
             var model = new CreateNewsViewModel
             {
+                Id = Guid.NewGuid().ToString(),
                 CreatedBy = HttpContext.Session.GetString("Name"),
                 CreatedDate = DateTime.Today.ToShortDateString()
             };
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                model = await getNewsModel(id);
+            }
+
+            
             return View(model);
         }
 
@@ -52,7 +62,7 @@ namespace Beruwala_Mirror.Controllers
             if (string.IsNullOrEmpty(model.Heading))
                 RedirectToAction("News");
 
-            var newsId = Guid.NewGuid().ToString();
+            var newsId = model.Id;
             var folderPath = CreateFolder(newsId);
             var newsmodel = new NewsModel
             {
@@ -76,6 +86,10 @@ namespace Beruwala_Mirror.Controllers
                     if (!result)
                         throw new Exception($"Could not upload the image to file repository. Please see the logs for details.");
                 }
+            }
+            else
+            {
+                stringImages.Add("thumbnail.jfif");
             }
 
             if (model.SubImage1 != null)
@@ -118,8 +132,7 @@ namespace Beruwala_Mirror.Controllers
                         throw new Exception("Could not upload the image to file repository. Please see the logs for details.");
                 }
             }
-
-            newsmodel.Images = stringImages;
+             newsmodel.Images = stringImages;
 
             var jsonString = JsonSerializer.Serialize(newsmodel);
 
@@ -199,6 +212,25 @@ namespace Beruwala_Mirror.Controllers
         {
             var dateFolder = DateTime.Today.ToString("dd-MM-yyy");
             return $@"{newsPath}/{dateFolder}/{newsId}";
+        }
+
+        private async Task<CreateNewsViewModel> getNewsModel(string Id)
+        {
+
+            var model = new CreateNewsViewModel();
+            try
+            {
+                var responseBody = await _fileUploader.GetFileFromS3(@"News/NewsItems/" + Id + ".json");
+                var newsModel = JsonConvert.DeserializeObject<CreateNewsViewModel>(responseBody);
+                
+                return newsModel;
+            }
+            catch (Exception ex)
+            {
+                //ignore 
+            }
+
+            return model;
         }
     }
 }

@@ -25,12 +25,14 @@ namespace Beruwala_Mirror.Controllers
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast2;
         private static IAmazonS3 _s3Client;
         private readonly IFileUploader _fileUploader;
+        private readonly IWatsAppMessageServices _watsAppMessageServices;
 
-        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, IFileUploader fileUploader)
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, IFileUploader fileUploader, IWatsAppMessageServices watsAppMessageServices)
         {
             _logger = logger;
             _s3Client = new AmazonS3Client(bucketRegion);
             _fileUploader = fileUploader;
+            _watsAppMessageServices = watsAppMessageServices;
         }
 
         public async Task<IActionResult> Index()
@@ -40,6 +42,8 @@ namespace Beruwala_Mirror.Controllers
             {
                 News = newsFromS3
             };
+
+           // _watsAppMessageServices.SendMessage("Hi","7885860529");
             return View(model);
         }
 
@@ -64,6 +68,7 @@ namespace Beruwala_Mirror.Controllers
                     Prefix = "News/NewsItems"
                 };
                 
+                
                 var listing = await _s3Client.ListObjectsV2Async(req);
                 foreach (var s3 in listing.S3Objects)
                 {
@@ -84,7 +89,7 @@ namespace Beruwala_Mirror.Controllers
 
         public ActionResult Thumbnail(string fileName)
         {
-            return Redirect($"{CloudFront}/{fileName}");
+            return Redirect(fileName.EndsWith("thumbnail.jfif") ? $"{CloudFront}/News/thumbnail.jfif" : $"{CloudFront}/{fileName}");
         }
     }
 }

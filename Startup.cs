@@ -31,6 +31,7 @@ namespace Beruwala_Mirror
                 options.IdleTimeout = TimeSpan.FromMinutes(60);//Session Timeout.  
             });
             services.AddTransient<IFileUploader, S3FileUploader>();
+            services.AddTransient<IWatsAppMessageServices, WatsAppMessageServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

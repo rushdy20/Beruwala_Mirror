@@ -1,7 +1,7 @@
 ﻿@model Beruwala_Mirror.Models.News.NewsModel
 
-<div class="card" style="width: 30rem;">
-    <img src="@Url.Action("Thumbnail",new {filename = "News/" +@Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + @Model.Id + @"/" + @Model.MainImg })" class="card-img-top", style=" max-height: 300px;" alt="...">
+<div class="card size" >
+    <img src="@Url.Action("Thumbnail",new {filename = "News/" +@Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + @Model.Id + @"/" + @Model.MainImg })" class="card-img-top", style=" max-height: 200px;" alt="...">
 
     <div class="card-body">
         <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>

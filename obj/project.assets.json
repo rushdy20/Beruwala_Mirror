@@ -1825,6 +1825,15 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "Whatsapp.NET/1.2.2": {
+        "type": "package",
+        "compile": {
+          "lib/WhatsAppApi.dll": {}
+        },
+        "runtime": {
+          "lib/WhatsAppApi.dll": {}
+        }
       }
     }
   },
@@ -6163,13 +6172,26 @@
         "system.xml.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "Whatsapp.NET/1.2.2": {
+      "sha512": "q86p1BtgXqOCERIkjIQ//vyz4bUkjtFGzaasfu4nIyLhXAPx8rN6ZHHN1d3cA/ZxPzl/khR14f8ssYVY64EVqw==",
+      "type": "package",
+      "path": "whatsapp.net/1.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/WhatsAppApi.dll",
+        "whatsapp.net.1.2.2.nupkg.sha512",
+        "whatsapp.net.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "AWSSDK.S3 >= 3.3.110.56",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.9.10",
-      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.1"
+      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.1",
+      "Whatsapp.NET >= 1.2.2"
     ]
   },
   "packageFolders": {
@@ -6227,6 +6249,10 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[3.1.1, )"
+          },
+          "Whatsapp.NET": {
+            "target": "Package",
+            "version": "[1.2.2, )"
           }
         },
         "imports": [
@@ -6250,5 +6276,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Whatsapp.NET 1.2.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "Whatsapp.NET",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

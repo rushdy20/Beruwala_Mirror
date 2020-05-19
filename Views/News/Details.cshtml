@@ -1,12 +1,13 @@
 ﻿@model Beruwala_Mirror.Models.News.NewsModel
 
-<div class="card" style="width: 60rem;">
+
+<div class="card" >
     <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + Model.MainImg})" class="card-img-top",  alt="...">
 
     <div class="card-body">
         <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>
         <p class="card-text">@Html.DisplayFor(m => m.NewsBody)</p>
-    </div>
+   
 
     @if (Model.YouTubLink.Trim().Length > 1)
     {
@@ -24,5 +25,20 @@
 
         </div>
     }
+    </div>
+    <div class="form-group">
+        <small id="emailHelp" class="form-text text-muted">Edited By :   @Model.CreatedBy    On :  @Model.CreatedDate.ToString("dd-MM-yyyy") </small>
+    </div>
 
+    @if (ViewBag.LoggedIn)
+    {
+        <div class="form-group">
+            @Html.ActionLink("Edit","News","Admin", new {id =Model.Id}, new {@class = "btn btn-primary" })
+        </div>
+        <div class="form-group">
+            <small  class="form-text text-muted">No of Visits :   @Model.NumberOfVisits </small>
+        </div>
+   
+    }
 </div>
+
