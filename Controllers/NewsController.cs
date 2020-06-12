@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Beruwala_Mirror.Models.News;
@@ -15,14 +16,16 @@ namespace Beruwala_Mirror.Controllers
     {
         private const string userFilePath = @"News/users.json";
         private const string newsItems = @"News/NewsItems";
-
+        
         private readonly IFileUploader _fileUploader;
+        private readonly ICacheManager _cacheManager;
 
         // GET: News
 
-        public NewsController(IFileUploader fileUploader)
+        public NewsController(IFileUploader fileUploader, ICacheManager cacheManager)
         {
             _fileUploader = fileUploader;
+            _cacheManager = cacheManager;
         }
 
         public ActionResult Index()
@@ -135,8 +138,10 @@ namespace Beruwala_Mirror.Controllers
             var model = new NewsModel();
             try
             {
-                var responseBody = await _fileUploader.GetFileFromS3(@"News/NewsItems/" + newsId + ".json");
-                var newsModel = JsonConvert.DeserializeObject<NewsModel>(responseBody);
+                var newsModel = _cacheManager.Get<List<NewsModel>>("NewsItems").FirstOrDefault(n => n.Id == newsId);
+
+               // var responseBody =  await _fileUploader.GetFileFromS3(@"News/NewsItems/" + newsId + ".json");
+              //   var newsModel = JsonConvert.DeserializeObject<NewsModel>(responseBody);
                 newsModel.MainImg = newsModel.Images.FirstOrDefault();
                 model = newsModel;
                var update = await UpdateVisits(model);

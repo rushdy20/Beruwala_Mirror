@@ -25,5 +25,9 @@ namespace Beruwala_Mirror.Models.Admin
         [Display(Name = "Created By")] public string CreatedBy { get; set; }
 
         [Display(Name = "YouTub Link")] public string YouTubLink { get; set; }
+
+        [Display(Name = "Set as Top News Item for Days")]
+        public int TopNewsForDays { get; set; }
+
     }
 }

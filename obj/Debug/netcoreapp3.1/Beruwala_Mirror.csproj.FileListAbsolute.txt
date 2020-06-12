@@ -201,8 +201,6 @@ C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\bin\Debug\netcoreapp
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.csproj.CoreCompileInputs.cache
-C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.MvcApplicationPartsAssemblyInfo.cache
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.RazorAssemblyInfo.cache
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.RazorAssemblyInfo.cs
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.AssemblyInfoInputs.cache
@@ -231,5 +229,8 @@ C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.dll
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.pdb
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.genruntimeconfig.cache
-C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.csprojAssemblyReference.cache
 C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\bin\Debug\netcoreapp3.1\aws-beanstalk-tools-defaults.json
+C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\bin\Debug\netcoreapp3.1\WhatsAppApi.dll
+C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.csproj.CoreCompileInputs.cache
+C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.MvcApplicationPartsAssemblyInfo.cache
+C:\Learning\Beruwala_Mirror\Beruwala.Mirror\Beruwala_Mirror\obj\Debug\netcoreapp3.1\Beruwala_Mirror.csprojAssemblyReference.cache

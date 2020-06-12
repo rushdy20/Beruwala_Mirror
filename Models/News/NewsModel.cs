@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using Beruwala_Mirror.Models.Extensions;
 
 namespace Beruwala_Mirror.Models.News
 {
@@ -28,5 +27,16 @@ namespace Beruwala_Mirror.Models.News
         public string YouTubLink { get; set; }
 
         public int NumberOfVisits { get; set; }
+
+        [Display(Name = "Set as Top News Item for Days")]
+        public int TopNewsForDays { get; set; }
+
+        public DateTime DisplayDate { get; set; }
+
+        public string ShortBody
+        {
+            
+            get { return this.NewsBody.GetSubString(100); }
+        }
     }
 }

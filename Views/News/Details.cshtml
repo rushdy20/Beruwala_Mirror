@@ -17,7 +17,7 @@
         </div>
     }
 
-    @foreach (var img in Model.Images)
+    @foreach (var img in Model.Images.Where(i => i != Model.MainImg))
     {
         <div class="row float-left margin-15">
 

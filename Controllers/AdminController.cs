@@ -17,10 +17,14 @@ namespace Beruwala_Mirror.Controllers
         private readonly IFileUploader _fileUploader;
         private const string newsPath = @"News";
         private const string newsItems = @"News/NewsItems";
+        private readonly ICacheManager _cacheManager;
 
-        public AdminController(IFileUploader fileUploader)
+        
+
+        public AdminController(IFileUploader fileUploader, ICacheManager cacheManager)
         {
             _fileUploader = fileUploader;
+            _cacheManager = cacheManager;
         }
 
         // GET: Admin
@@ -141,6 +145,8 @@ namespace Beruwala_Mirror.Controllers
 
             if (!isSaved)
                 throw new Exception("Could not upload the image to file repository. Please see the logs for details.");
+
+            _cacheManager.RemoveCache("NewsItems");
 
             return RedirectToAction("index", "Home");
         }

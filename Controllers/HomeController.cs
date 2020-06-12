@@ -12,6 +12,7 @@ using Beruwala_Mirror.Models.News;
 using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -26,13 +27,15 @@ namespace Beruwala_Mirror.Controllers
         private static IAmazonS3 _s3Client;
         private readonly IFileUploader _fileUploader;
         private readonly IWatsAppMessageServices _watsAppMessageServices;
+        private readonly ICacheManager _cache;
 
-        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, IFileUploader fileUploader, IWatsAppMessageServices watsAppMessageServices)
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, IFileUploader fileUploader, IWatsAppMessageServices watsAppMessageServices, ICacheManager cacheManager)
         {
             _logger = logger;
             _s3Client = new AmazonS3Client(bucketRegion);
             _fileUploader = fileUploader;
             _watsAppMessageServices = watsAppMessageServices;
+            _cache = cacheManager;
         }
 
         public async Task<IActionResult> Index()
@@ -59,6 +62,9 @@ namespace Beruwala_Mirror.Controllers
         }
         private async Task<List<NewsModel>> GetNewsFromS3()
         {
+            var newsFromCache = _cache.Get<List<NewsModel>>("NewsItems");
+            if (newsFromCache !=null && newsFromCache.Any()) return newsFromCache;
+
             var newsCollection = new List<NewsModel>();
             try
             {
@@ -75,7 +81,10 @@ namespace Beruwala_Mirror.Controllers
                     var responseBody = await _fileUploader.GetFileFromS3(s3.Key);
                     var newsModel = JsonConvert.DeserializeObject<NewsModel>(responseBody);
                     newsModel.MainImg = newsModel.Images.FirstOrDefault();
-                    newsModel.NewsBody = newsModel.NewsBody.Length > 100 ? newsModel.NewsBody.Substring(0, 99) : newsModel.NewsBody;
+                    //newsModel.NewsBody = newsModel.NewsBody.Length > 100 ? newsModel.NewsBody.Substring(0, 99) : newsModel.NewsBody;
+                    newsModel.DisplayDate = newsModel.CreatedDate.AddDays(newsModel.TopNewsForDays);
+                    newsModel.CreatedDate = newsModel.DisplayDate >= DateTime.Today ? DateTime.Today : newsModel.CreatedDate;
+
                     newsCollection.Add(newsModel);
                 }
             }
@@ -84,7 +93,9 @@ namespace Beruwala_Mirror.Controllers
                 //ignore 
             }
 
-            return newsCollection.OrderByDescending(n => n.CreatedDate).ToList();
+            var newsItems = newsCollection.OrderByDescending(n => n.DisplayDate).ToList();
+               _cache.Set<List<NewsModel>>("NewsItems", newsItems);
+               return _cache.Get<List<NewsModel>>("NewsItems");
         }
 
         public ActionResult Thumbnail(string fileName)
