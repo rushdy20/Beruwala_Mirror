@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Beruwala_Mirror.Models.Admin
 {
@@ -25,6 +27,9 @@ namespace Beruwala_Mirror.Models.Admin
         [Display(Name = "Created By")] public string CreatedBy { get; set; }
 
         [Display(Name = "YouTub Link")] public string YouTubLink { get; set; }
+        [Display(Name = "News Category")]
+        public string CategoryId { get; set; }
+        public List<SelectListItem> NewsCategories { get; set; }
 
         [Display(Name = "Set as Top News Item for Days")]
         public int TopNewsForDays { get; set; }

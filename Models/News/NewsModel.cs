@@ -33,6 +33,8 @@ namespace Beruwala_Mirror.Models.News
 
         public DateTime DisplayDate { get; set; }
 
+        public int CategoryId { get; set; }
+
         public string ShortBody
         {
             

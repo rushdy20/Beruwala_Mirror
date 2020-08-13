@@ -1,0 +1,51 @@
+﻿@model Beruwala_Mirror.Models.Admin.AdminModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Admin Page</h1>
+
+@using (Html.BeginForm("AddCategory", "Admin", FormMethod.Post))
+{
+    <div class="form-group row container custom-box">
+        <div class="col-sm-8">
+            @Html.Label("Enter Category Name")
+            @Html.TextBoxFor(m => m.AddCategory.Name, new { @class = "form-control" })
+        </div>
+        <div class="col-sm-4 marginT32">
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+
+        @*</div>
+            <div class="form-group row container">*@
+        <div class="col-sm-12">
+            <ul>
+                <li>
+                    News Categories
+                    <ul>
+                        @foreach (var category in Model.NewsCategories.Categories)
+                        {
+                            <li>
+                                @category.Name
+                            </li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-4 marginT32">
+            @Html.ActionLink("Save", "Save", "Admin", null, new { @class = "btn btn-success" })
+        </div>
+    </div>
+    <div class="form-group row container custom-box">
+        @Html.ActionLink("Create News", "News", "Admin", null, new { @class = "btn btn-success" })
+    </div>
+
+    <div class="form-group row container custom-box">
+        @Html.ActionLink("Refresh News", "Refresh", "Admin", null, new { @class = "btn btn-success" })
+    </div>
+
+    <div class="form-group row container custom-box">
+        @Html.ActionLink("Advertisement", "Advertisement", "Admin", null, new { @class = "btn btn-success" })
+    </div>
+}

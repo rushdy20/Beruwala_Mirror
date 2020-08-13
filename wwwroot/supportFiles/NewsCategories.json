@@ -1,0 +1,24 @@
+{
+  "Categories": [
+    {
+      "CategoryId": 1000,
+      "Name": "\u0B89\u0BB2\u0B95\u0B9A\u0BCD \u0B9A\u0BC6\u0BAF\u0BCD\u0BA4\u0BBF\u0B95\u0BB3\u0BCD ",
+      "Order": 2 
+    },
+    {
+      "CategoryId": 7214,
+      "Name": "\u0BB5\u0BBF\u0BB3\u0BC8\u0BAF\u0BBE\u0B9F\u0BCD\u0B9F\u0BC1\u0B9A\u0BCD \u0B9A\u0BC6\u0BAF\u0BCD\u0BA4\u0BBF\u0B95\u0BB3\u0BCD ",
+      "Order": 4
+    },
+    {
+      "CategoryId": 9201,
+      "Name": "\u0BAA\u0BC7\u0BB0\u0BC1\u0BB5\u0BB3\u0BC8 \u0B9A\u0BC6\u0BAF\u0BCD\u0BA4\u0BBF\u0B95\u0BB3\u0BCD ",
+      "Order": 3
+    },
+    {
+      "CategoryId": 6710,
+      "Name": "\u0B89\u0BB3\u0BCD\u0BA8\u0BBE\u0B9F\u0BCD\u0B9F\u0BC1\u0B9A\u0BCD \u0B9A\u0BC6\u0BAF\u0BCD\u0BA4\u0BBF\u0B95\u0BB3\u0BCD ",
+      "Order": 1
+    }
+  ]
+}

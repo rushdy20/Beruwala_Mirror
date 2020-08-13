@@ -2,11 +2,11 @@
 
 
 <div class="card" >
-    <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + Model.MainImg})" class="card-img-top",  alt="...">
+    <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + Model.MainImg})" class="img-fluid",  alt="...">
 
     <div class="card-body">
         <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>
-        <p class="card-text">@Html.DisplayFor(m => m.NewsBody)</p>
+        <p class="card-text multiline">@Html.DisplayFor(m => m.NewsBody)</p>
    
 
     @if (Model.YouTubLink.Trim().Length > 1)
@@ -21,7 +21,7 @@
     {
         <div class="row float-left margin-15">
 
-            <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + img})" class="card-img-top"  alt="...">
+            <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + img})" class="img-fluid"  alt="...">
 
         </div>
     }

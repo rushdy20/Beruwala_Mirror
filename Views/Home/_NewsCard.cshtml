@@ -2,11 +2,12 @@
 @model Beruwala_Mirror.Models.News.NewsModel
 
 <div class="card size" >
-    <img src="@Url.Action("Thumbnail",new {filename = "News/" +@Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + @Model.Id + @"/" + @Model.MainImg })" class="card-img-top", style=" max-height: 200px;" alt="...">
+    <img src="@Url.Action("Thumbnail",new {filename = "News/" +@Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + @Model.Id + @"/" + @Model.MainImg })" class="card-img-top", style=" max-height: 200px; height: auto" alt="...">
 
     <div class="card-body">
         <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>
-        <p class="card-text">@Html.DisplayFor(m => m.ShortBody)</p>
+        <p class="card-text">
+            @Html.Raw(Html.Encode(Model.ShortBody).Replace("\n", "<br />"))</p>
         @Html.ActionLink("Read ...","Details","News", new { Id = Model.Id}, new {@class = "btn btn-link"})
     </div>
 </div>

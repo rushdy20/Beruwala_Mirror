@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon;
+using Amazon.S3;
+using Amazon.S3.Model;
 using Beruwala_Mirror.Models.Admin;
 using Beruwala_Mirror.Models.News;
 using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static Newtonsoft.Json.JsonConvert;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Beruwala_Mirror.Controllers
@@ -18,25 +22,35 @@ namespace Beruwala_Mirror.Controllers
         private const string newsPath = @"News";
         private const string newsItems = @"News/NewsItems";
         private readonly ICacheManager _cacheManager;
+        private NewsCategories _newsCategories;
+        private Random _random;
 
-        
+
 
         public AdminController(IFileUploader fileUploader, ICacheManager cacheManager)
         {
             _fileUploader = fileUploader;
             _cacheManager = cacheManager;
+            _newsCategories = GetNewsCategories().Result;
+            _random = new Random();
         }
 
         // GET: Admin
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            if (HttpContext.Session.GetString("Name") == null)
+                return RedirectToAction("Create", "News");
+
+            var model = new AdminModel();
+            model.NewsCategories = await GetNewsCategories();
+            return View(model);
         }
 
         // GET: Admin/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Save()
         {
-            return View();
+            UpdateCategoryInS3(_newsCategories);
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> News(string id)
@@ -48,7 +62,8 @@ namespace Beruwala_Mirror.Controllers
             {
                 Id = Guid.NewGuid().ToString(),
                 CreatedBy = HttpContext.Session.GetString("Name"),
-                CreatedDate = DateTime.Today.ToShortDateString()
+                CreatedDate = DateTime.Today.ToShortDateString(),
+                NewsCategories = _newsCategories.Categories.Select(s => new SelectListItem{ Text = s.Name, Value = s.CategoryId.ToString()}).ToList()
             };
 
             if (!string.IsNullOrEmpty(id))
@@ -58,6 +73,13 @@ namespace Beruwala_Mirror.Controllers
 
             
             return View(model);
+        }
+
+        public async Task<ActionResult> Refresh()
+        {
+            _cacheManager.RemoveCache("NewsItems");
+           await _fileUploader.SaveFileAsync(@"News/NewsItems.json", string.Empty);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -75,7 +97,9 @@ namespace Beruwala_Mirror.Controllers
                 CreatedDate = DateTime.Today,
                 Heading = model.Heading,
                 NewsBody = model.NewsBody,
-                YouTubLink = model.YouTubLink ?? string.Empty
+                YouTubLink = model.YouTubLink ?? string.Empty,
+                CategoryId = int.Parse(model.CategoryId)
+                
             };
             var stringImages = new List<string>();
 
@@ -146,73 +170,77 @@ namespace Beruwala_Mirror.Controllers
             if (!isSaved)
                 throw new Exception("Could not upload the image to file repository. Please see the logs for details.");
 
-            _cacheManager.RemoveCache("NewsItems");
+           // _cacheManager.RemoveCache("NewsItems");
+           _cacheManager.SetNewsItem(newsmodel);
 
             return RedirectToAction("index", "Home");
         }
 
-        // POST: Admin/Create
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> AddCategory(IFormCollection collection)
         {
-            try
-            {
-                // TODO: Add insert logic here
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            var newCategory = new CategoryModel
             {
-                return View();
-            }
+                Name = collection["AddCategory.Name"],
+                CategoryId = _random.Next(1001,9999) 
+            };
+             _newsCategories.Categories.Add(newCategory);
+            _cacheManager.Set("NewsCategories", _newsCategories);
+
+            return RedirectToAction("Index");
         }
 
-        // GET: Admin/Edit/5
-        public ActionResult Edit(int id)
+
+       public async Task<ActionResult>  Advertisement()
         {
-            return View();
+            var model = new AdvertiseModel
+            {
+                Id = Guid.NewGuid().ToString(),
+                StartDate = DateTime.Today
+            };
+
+            return View(model);
         }
 
-        // POST: Admin/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+
+        public async Task<ActionResult> SaveAdvertisement(AdvertiseModel model)
         {
-            try
-            {
-                // TODO: Add update logic here
+            if (model.MainImage == null)
+                return View("Advertisement");
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+           using (var readStream = model.MainImage.OpenReadStream())
+              {
+                    var result = await _fileUploader.UploadFileAsync($@"Advertisement/{model.MainImage.FileName}", readStream)
+                        .ConfigureAwait(false);
+
+                    if (!result)
+                        throw new Exception($"Could not upload the image to file repository. Please see the logs for details.");
+             }
+
+           var advertisements = new List<AdvertiseModel>();
+            var advertisementsJson = await _fileUploader.GetFileFromS3(@"Advertisement/Advertisements.json");
+
+            if (!string.IsNullOrEmpty(advertisementsJson))
             {
-                return View();
+                advertisements = DeserializeObject<List<AdvertiseModel>>(advertisementsJson);
             }
+
+            model.MainImage = null;
+
+            advertisements.Add(model);
+
+            var jsonString = JsonSerializer.Serialize(advertisements);
+
+            await _fileUploader.SaveFileAsync($@"Advertisement/Advertisements.json", jsonString);
+
+
+
+            return RedirectToAction("Index", "Home");
         }
-
-        // GET: Admin/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Admin/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
 
         private string CreateFolder(string newsId)
         {
@@ -226,10 +254,23 @@ namespace Beruwala_Mirror.Controllers
             var model = new CreateNewsViewModel();
             try
             {
-                var responseBody = await _fileUploader.GetFileFromS3(@"News/NewsItems/" + Id + ".json");
-                var newsModel = JsonConvert.DeserializeObject<CreateNewsViewModel>(responseBody);
+                var newsFromCache = _cacheManager.Get<List<NewsModel>>("NewsItems").FirstOrDefault(n => n.Id == Id);
+
+                if (newsFromCache != null)
+                {
+                    var json = SerializeObject(newsFromCache);
+                    model = DeserializeObject<CreateNewsViewModel>(json);
+                }
+                else
+                {
+                    var responseBody = await _fileUploader.GetFileFromS3(@"News/NewsItems/" + Id + ".json");
+                    model = DeserializeObject<CreateNewsViewModel>(responseBody);
+                }
+
+                var newsCategories = await GetNewsCategories();
+                model.NewsCategories = newsCategories.Categories.Select(s => new SelectListItem{Text = s.Name, Value = s.CategoryId.ToString()}).ToList();
                 
-                return newsModel;
+                return model;
             }
             catch (Exception ex)
             {
@@ -238,5 +279,53 @@ namespace Beruwala_Mirror.Controllers
 
             return model;
         }
+
+        private async Task<NewsCategories> GetNewsCategories()
+        {
+           
+            try
+            {
+                var cachedCategories = _cacheManager.Get<NewsCategories>("NewsCategories");
+
+                if (cachedCategories !=null && cachedCategories.Categories != null && cachedCategories.Categories.Any()) return cachedCategories;
+
+                var newsCategories =  await _fileUploader.GetFileFromS3(@"News/NewsCategories.json");
+                if (newsCategories ==  null)
+                {
+                    return new NewsCategories();
+                }
+
+                var categoriesFromS3 = DeserializeObject<NewsCategories>(newsCategories);
+                _cacheManager.Set("NewsCategories", categoriesFromS3);
+                _newsCategories = categoriesFromS3;
+                return categoriesFromS3;
+
+            }
+            catch (Exception ex)
+            {
+                //ignore 
+            }
+
+            return null;
+        }
+
+        private async Task<bool> UpdateCategoryInS3(NewsCategories model)
+        {
+            
+            var jsonString = JsonSerializer.Serialize(model);
+
+            var isSaved = await _fileUploader.SaveFileAsync(@"News/NewsCategories.json", jsonString)
+                .ConfigureAwait(false);
+
+            return true;
+
+        }
+
+        private void UpdateCechNewsItem(string newsItem, string Id)
+        {
+            var newsFromCache = _cacheManager.Get<List<NewsModel>>("NewsItems").FirstOrDefault(n => n.Id == Id);
+        }
+
+
     }
 }

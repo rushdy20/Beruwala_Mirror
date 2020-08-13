@@ -4,21 +4,22 @@
     var lastnewsDate = DateTime.Today.ToShortDateString();
 }
 
-    <div class="form-group">
-        <div class="NewNewsFeedSeperator">News @DateTime.Today.ToString("dd-MM-yyyy")</div>
-        @foreach (var item in Model.News)
+<div class="form-group">
+    <div class="NewNewsFeedSeperator">News @DateTime.Today.ToString("dd-MM-yyyy")</div>
+    @foreach (var item in Model.News)
+    {
+        if (item.CreatedDate.ToShortDateString() != lastnewsDate)
         {
-            if (item.CreatedDate.ToShortDateString() != lastnewsDate)
-            {
-                <div class="NewNewsFeedSeperator">News @item.CreatedDate.ToString("dd-MM-yyyy")</div>
-            }
-            lastnewsDate = item.CreatedDate.ToShortDateString();
-            <div class="row float-left" style="margin-right: 10px; margin-bottom: 10px;">
-                <div class="col-md-5">
-                    @Html.Partial("_NewsCard", item)
-                </div>
-
+            <div class="NewNewsFeedSeperator">News @item.CreatedDate.ToString("dd-MM-yyyy")</div>
+        }
+        lastnewsDate = item.CreatedDate.ToShortDateString();
+        <div class="row float-left" style="margin-right: 10px; margin-bottom: 10px;">
+            <div class="col-md-5">
+                @Html.Partial("_NewsCard", item)
             </div>
 
-        }
-    </div>
+        </div>
+
+    }
+</div>
+

@@ -8,9 +8,13 @@ using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using Beruwala_Mirror.Models.Admin;
 using Beruwala_Mirror.Models.News;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using static Newtonsoft.Json.JsonConvert;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Beruwala_Mirror.Services
 {
@@ -112,6 +116,57 @@ namespace Beruwala_Mirror.Services
 
             return string.Empty;
         }
-    
-}
+
+        public async Task<bool> UpdateS3ReaderCount(bool isFromFile)
+        {
+
+            var s3readCount = await GetFileFromS3(@"News/S3ReadCount.json");
+            if (s3readCount == null)
+            {
+                // return new NewsCategories();
+                return false;
+            }
+
+            var s3count = DeserializeObject<NewsCategories>(s3readCount);
+
+            var today = DateTime.Today.ToString("dd-MM-yyyy");
+             today = isFromFile? $"{today}-FromFile" : today;
+            var todayCount = new CategoryModel { CategoryId = 0, Name = today };
+
+            if (s3count.Categories.Any(s => s.Name == today))
+
+                todayCount = s3count.Categories.First(s => s.Name == today);
+            if (todayCount != null)
+            {
+                s3count.Categories.Remove(todayCount);
+            }
+
+            todayCount.CategoryId = todayCount.CategoryId + 1;
+
+            s3count.Categories.Add(todayCount);
+            var jsonString = JsonSerializer.Serialize(s3count);
+
+            await SaveFileAsync(@"News/S3ReadCount.json", jsonString);
+
+            return true;
+        }
+
+        public string ReadFile(string fullName)
+        {
+            var path = System.IO.Path.Combine("wwwroot", "supportFiles", fullName);
+            var jsonString = File.ReadAllText(path);
+           // var myJObject = JObject.Parse(myJsonString);
+
+            return jsonString;
+        }
+
+        public string saveToFile(string fullName, string content)
+        {
+            var path = System.IO.Path.Combine("wwwroot", "supportFiles", fullName);
+            File.WriteAllText(path, content);
+            // var myJObject = JObject.Parse(myJsonString);
+
+            return string.Empty;
+        }
+    }
 }
