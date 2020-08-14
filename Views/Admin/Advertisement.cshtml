@@ -25,24 +25,8 @@
 
     <div class="form-group">
         @Html.LabelFor(m => m.NoOfDaysToAdvertise)
-        @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control" })
+        @Html.TextBoxFor(m => m.NoOfDaysToAdvertise, new { @class = "form-control" })
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
 }
-<div class="form-group"> <!-- Date input -->
-    <label class="control-label" for="date">Date</label>
-    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
-</div>
-<script>
-    $(document).ready(function(){
-        var date_input=$('input[name="date"]'); //our date input has the name "date"
-        var options={
-            format: 'mm/dd/yyyy',
-            container: container,
-            todayHighlight: true,
-            autoclose: true,
-        };
-        date_input.datepicker(options);
-    })
-</script>
