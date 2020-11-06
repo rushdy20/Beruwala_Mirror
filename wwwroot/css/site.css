@@ -71,9 +71,12 @@ body {
 }
 .NewNewsFeedSeperator {
     clear: both;
-    margin-bottom: 15px;
     font-weight: bold;
-    margin-top: 15px
+    margin-top: 15px;
+    height: 46px;
+    background-color: white
+
+
 }
 .margin-15 {
     margin: 15px;
@@ -84,7 +87,7 @@ body {
 }
 
 .card.size {
-    width: 25rem;
+    width: 22rem;
     height: 30rem;
 }
 .marginT32 {
@@ -142,7 +145,7 @@ html {
 }
 
 .header {
-    color: #ffffff;
+    background-color: white
     padding: 15px;
 }
 
@@ -165,7 +168,7 @@ html {
 }
 
 .aside {
-    padding: 15px;
+    padding-bottom: 15px;
 }
 
 .footer {
@@ -186,7 +189,8 @@ html {
 }
 
 .col-3 {
-    width: 25%;
+   width: 25%;
+   /* width: 250px;*/
 }
 
 .col-4 {
@@ -211,6 +215,7 @@ html {
 
 .col-9 {
     width: 75%;
+   /* width: 750px;*/
 }
 
 .col-10 {
@@ -234,4 +239,21 @@ html {
     [class*="col-"] {
         width: 100%;
     }
+}
+
+.news-card {
+    margin-right: 10px;
+    padding: 11px;
+    background-color: white
+}
+
+.wallpaper {
+    margin: 5%;
+    z-index: -1;
+    position: fixed;
+    top: 225px;
+    margin-left: 3%;
+}
+.adverts {
+    background-color: white
 }

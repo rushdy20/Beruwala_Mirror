@@ -228,6 +228,7 @@ namespace Beruwala_Mirror.Controllers
                 advertisements = DeserializeObject<List<AdvertiseModel>>(advertisementsJson);
             }
 
+            model.FileName = model.MainImage.FileName;
             model.MainImage = null;
 
             advertisements.Add(model);

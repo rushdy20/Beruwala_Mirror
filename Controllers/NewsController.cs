@@ -145,7 +145,7 @@ namespace Beruwala_Mirror.Controllers
               //   var newsModel = JsonConvert.DeserializeObject<NewsModel>(responseBody);
                 newsModel.MainImg = newsModel.Images.FirstOrDefault();
                 model = newsModel;
-               var update = await UpdateVisits(model);
+              // var update = await UpdateVisits(model);
 
             }
             catch (Exception ex)

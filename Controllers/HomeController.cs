@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon;
@@ -10,11 +9,11 @@ using Amazon.S3.Model;
 using Beruwala_Mirror.Models;
 using Beruwala_Mirror.Models.Admin;
 using Beruwala_Mirror.Models.News;
+using Beruwala_Mirror.Models.ViewModels;
 using Beruwala_Mirror.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -24,6 +23,7 @@ namespace Beruwala_Mirror.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private const string CloudFront = "http://d1j1ye7fpazrcq.cloudfront.net";
+        private const string CloudFront2 = "http://dxj9vmt82q5v2.cloudfront.net";
         private const string BucketName = "beruwalamirror";
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast2;
         private static IAmazonS3 _s3Client;
@@ -41,20 +41,20 @@ namespace Beruwala_Mirror.Controllers
 
             var a = GetNewsCategories().Result;
 
-           // ViewData["newsCategory"] = a;
-           ViewBag.NewsCategory = a;
+            // ViewData["newsCategory"] = a;
+            ViewBag.NewsCategory = a;
         }
 
         public async Task<IActionResult> Index(int cat)
         {
-          //  var newsFromS3 = new NewsModel[] {new NewsModel {CategoryId = 1, CreatedDate = DateTime.Today, DisplayDate = DateTime.Today,Images = new List<string>(), NewsBody = string.Empty, YouTubLink ="https://"} };
-           var newsFromS3 = await GetNewsFromS3();
+            //  var newsFromS3 = new NewsModel[] {new NewsModel {CategoryId = 1, CreatedDate = DateTime.Today, DisplayDate = DateTime.Today,Images = new List<string>(), NewsBody = string.Empty, YouTubLink ="https://"} };
+            var newsFromS3 = await GetNewsFromS3();
             var model = new NewsViewModel
             {
-                News = cat >0 ?  newsFromS3.Where(n => n.CategoryId == cat) : newsFromS3
+                News = cat > 0 ? newsFromS3.Where(n => n.CategoryId == cat) : newsFromS3
             };
 
-           // _watsAppMessageServices.SendMessage("Hi","7885860529");
+            // _watsAppMessageServices.SendMessage("Hi","7885860529");
             return View(model);
         }
 
@@ -68,19 +68,20 @@ namespace Beruwala_Mirror.Controllers
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
+
         private async Task<List<NewsModel>> GetNewsFromS3()
         {
             var newsFromCache = _cache.Get<List<NewsModel>>("NewsItems");
-            if (newsFromCache !=null && newsFromCache.Any()) return newsFromCache;
+            if (newsFromCache != null && newsFromCache.Any()) return newsFromCache;
 
             var newsItemsFromFile = await _fileUploader.GetFileFromS3(@"News/NewsItems.json"); // _fileUploader.ReadFile("NewsItems.json");
 
             if (!string.IsNullOrWhiteSpace(newsItemsFromFile))
             {
-              //  await _fileUploader.UpdateS3ReaderCount(true);
+                //  await _fileUploader.UpdateS3ReaderCount(true);
                 var newsModel = JsonConvert.DeserializeObject<List<NewsModel>>(newsItemsFromFile);
                 var newsItemsFile = newsModel.OrderByDescending(n => n.DisplayDate).ToList();
-                _cache.Set<List<NewsModel>>("NewsItems", newsItemsFile);
+                _cache.Set("NewsItems", newsItemsFile);
                 return newsItemsFile;
             }
 
@@ -92,10 +93,9 @@ namespace Beruwala_Mirror.Controllers
                     BucketName = BucketName,
                     Prefix = "News/NewsItems"
                 };
-                
-                
+
                 var listing = await _s3Client.ListObjectsV2Async(req);
-             //   await _fileUploader.UpdateS3ReaderCount(false);
+                //   await _fileUploader.UpdateS3ReaderCount(false);
                 foreach (var s3 in listing.S3Objects)
                 {
                     var responseBody = await _fileUploader.GetFileFromS3(s3.Key);
@@ -105,13 +105,9 @@ namespace Beruwala_Mirror.Controllers
                     newsModel.DisplayDate = newsModel.CreatedDate.AddDays(newsModel.TopNewsForDays);
 
                     if (newsModel.DisplayDate >= DateTime.Today)
-                    {
                         newsModel.CreatedDate = DateTime.Today;
-                    }
                     else
-                    {
                         newsModel.DisplayDate = newsModel.CreatedDate;
-                    }
 
                     newsCollection.Add(newsModel);
                 }
@@ -122,10 +118,10 @@ namespace Beruwala_Mirror.Controllers
             }
 
             var newsItems = newsCollection.OrderByDescending(n => n.DisplayDate).ToList();
-               _cache.Set<List<NewsModel>>("NewsItems", newsItems);
+            _cache.Set("NewsItems", newsItems);
 
-              await _fileUploader.SaveFileAsync("News/NewsItems.json", JsonConvert.SerializeObject(newsItems));
-               return _cache.Get<List<NewsModel>>("NewsItems");
+            await _fileUploader.SaveFileAsync("News/NewsItems.json", JsonConvert.SerializeObject(newsItems));
+            return _cache.Get<List<NewsModel>>("NewsItems");
         }
 
         public ActionResult Thumbnail(string fileName)
@@ -133,24 +129,16 @@ namespace Beruwala_Mirror.Controllers
             return Redirect(fileName.EndsWith("thumbnail.jfif") ? $"{CloudFront}/News/thumbnail.jfif" : $"{CloudFront}/{fileName}");
         }
 
-        private async  Task<List<SelectListItem>> GetNewsCategories()
+        private async Task<List<SelectListItem>> GetNewsCategories()
         {
-
             try
             {
-                var cacheCategory =  _cache.Get<NewsCategories>("NewsCategories");
-                if (cacheCategory != null)
-                {
-                    return cacheCategory.Categories.Select(s => new SelectListItem { Text = s.Name, Value = s.CategoryId.ToString() }).ToList();
-                    
-                }
+                var cacheCategory = _cache.Get<NewsCategories>("NewsCategories");
+                if (cacheCategory != null) return cacheCategory.Categories.Select(s => new SelectListItem {Text = s.Name, Value = s.CategoryId.ToString()}).ToList();
 
                 // var newsCategories = await _fileUploader.GetFileFromS3(@"News/NewsCategories.json");
                 var newsCategories = _fileUploader.ReadFile("NewsCategories.json");
-                if (newsCategories == null)
-                {
-                    return new List<SelectListItem>();
-                }
+                if (newsCategories == null) return new List<SelectListItem>();
 
                 var categoriesFromS3 = JsonConvert.DeserializeObject<NewsCategories>(newsCategories);
                 categoriesFromS3.Categories = categoriesFromS3.Categories.OrderBy(c => c.Order).ToList();
@@ -162,17 +150,46 @@ namespace Beruwala_Mirror.Controllers
             {
                 //ignore 
             }
-            
+
             return new List<SelectListItem>();
         }
 
-        public List<SelectListItem> NewsCategory()
+        private async Task<List<AdvertiseModel>> GetAdvertisements()
         {
-            var model =  GetNewsCategories().Result;
+            var advertisements = new List<AdvertiseModel>();
+            try
+            {
+                var advertiseModel = _cache.Get<List<AdvertiseModel>>("Advertisements");
+                if (advertiseModel != null) return advertiseModel.Where(a => a.StartDate.AddDays(a.NoOfDaysToAdvertise) > DateTime.Today).ToList();
+
+                // var newsCategories = await _fileUploader.GetFileFromS3(@"News/NewsCategories.json");
+
+                var advertisementsJson = await _fileUploader.GetFileFromS3(@"Advertisement/Advertisements.json");
+
+                if (!string.IsNullOrEmpty(advertisementsJson)) advertisements = JsonConvert.DeserializeObject<List<AdvertiseModel>>(advertisementsJson);
+
+                var activeAdverts = advertiseModel.Where(a => a.StartDate.AddDays(a.NoOfDaysToAdvertise) > DateTime.Today).ToList();
+
+                _cache.Set("Advertisements", activeAdverts);
+
+                return activeAdverts;
+            }
+            catch (Exception ex)
+            {
+                //ignore 
+            }
+
+            return advertisements;
+        }
+
+        public LayoutViewModel GetLayoutViewModel()
+        {
+            var model = new LayoutViewModel
+            {
+                NewsCategory = GetNewsCategories().Result,
+                Advertisements = GetAdvertisements().Result
+            };
             return model;
-
-            // return View("_newscategory", model);
-
         }
     }
 }

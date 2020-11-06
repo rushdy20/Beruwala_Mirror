@@ -15,5 +15,7 @@ namespace Beruwala_Mirror.Models.Admin
         public int NoOfDaysToAdvertise { get; set; }
 
         [Display(Name = "Main Image")] public IFormFile MainImage { get; set; }
+
+        public string FileName { get; set; }
     }
 }

@@ -3,21 +3,30 @@
     var viewModel = ViewBag.NewsCategory;
     var a = "";
 }
-  
+
 <!DOCTYPE html>
 <html lang="en">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+@RenderSection("Meta", required: false)
+
+<meta property="og:type" content="article" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <head>
 
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Beruwala_Mirror</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <div id="fb-root"></div>
 <div class="header">
     <nav class="nav navbar-nav navbar-right">
         <div>
@@ -30,8 +39,6 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-
         </div>
     </nav>
     <nav class="nav navbar-nav navbar-right">
@@ -43,67 +50,88 @@
         </ul>
     </div>
 </div>
-<div class="row">
-    @* <div class="col-1 menu">
-            <ul class="nav justify-content-center newsCategory">
-                @*<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+<img src="@Url.Action("Thumbnail", "Home", new {filename = "thumbnail.jfif"})" class="img-fluid wallpaper" , alt="...">
+    <div class="row">
+        @* <div class="col-1 menu">
+                    <ul class="nav justify-content-center newsCategory">
+                        @*<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 
-        </ul>
-    </div>*@
-    <div class="col-9 menu padding-left-2p">
-        @RenderBody()
+                </ul>
+            </div>*@
+        <div class="col-9 menu padding-left-2p">
+           
+            @RenderBody()
+        </div>
+        <div class="col-3 right adverts">
+
+        </div>
+
+        <div class="col-3 right ">
+            <div class="aside">
+                <img src="@Url.Action("Thumbnail", "Home", new {filename = "Advertisement/AdvertiseWithUse.jpg"})" class="card-img-top" , style="height: auto" alt="...">
+            </div>
+        </div>
+
     </div>
-    <div class="col-3 right">
-        <div class="aside">
-            <img src="@Url.Action("Thumbnail","Home" ,new {filename = "Advertisement/AdvertiseWithUse.jpg"})" class="card-img-top" , style="height: auto" alt="...">
-         </div>
-    </div>
-
-</div>
 
 
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@RenderSection("Scripts", required: false)
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         var currentUrl = window.location.href;
         var selectedCatId = currentUrl.substring(currentUrl.length - 4, currentUrl.length);
         $.ajax({
             type: "GET",
-            url: "/Home/NewsCategory",
-            success: function(viewHTML) {
+            url: "/Home/GetLayoutViewModel",
+            success: function (viewHTML) {
                 var html = "";
-                if (viewHTML.length > 0) {
+                if (viewHTML.newsCategory.length > 0) {
 
-                    for (i = 0; i < viewHTML.length; i++) {
+                    for (i = 0; i < viewHTML.newsCategory.length; i++) {
                         html += "<li class=\"nav - item\">";
-                        if (viewHTML[i].value == selectedCatId) {
+                        if (viewHTML.newsCategory[i].value == selectedCatId) {
                             html += "<a href=\"/?Cat=" +
-                                viewHTML[i].value +
+                                viewHTML.newsCategory[i].value +
                                 "\" class=\"nav-link text-dark\"> <span class= \"nav-sp nav-sp-active\">" +
-                                viewHTML[i].text +
+                                viewHTML.newsCategory[i].text +
                                 "</span></a>";
                         } else {
                             html += "<a href=\"/?Cat=" +
-                                viewHTML[i].value +
+                                viewHTML.newsCategory[i].value +
                                 "\" class=\"nav-link text-dark\"> <span class= \"nav-sp\">" +
-                                viewHTML[i].text +
+                                viewHTML.newsCategory[i].text +
                                 "</span></a>";
                         }
                         html += "</li>";
                     }
                 }
                 $(".newsCategory").html(html);
+
+                if (viewHTML.advertisements.length > 0) {
+                    var adverts = "";
+                    for (i = 0; i < viewHTML.advertisements.length; i++) {
+                        adverts += "<div class=\"aside\">";
+
+                        adverts += "<img src=\"/Home/Thumbnail?filename=Advertisement%2F" +
+                            viewHTML.advertisements[i].fileName + "\"";
+
+                        adverts += "class=\"card-img-top\" , style=\"height: auto\" alt=\"" +
+                            viewHTML.advertisements[i].name +
+                            "\"> ";
+                        adverts += "</div>";
+                    }
+                }
+                $(".adverts").html(adverts);
             },
-            error: function(errorData) { onError(errorData); }
+            error: function (errorData) { onError(errorData); }
         });
 
 
     });
-</script>
 
+</script>
 </html>

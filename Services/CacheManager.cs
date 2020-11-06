@@ -84,7 +84,7 @@ namespace Beruwala_Mirror.Services
             return _cache.Get<T>(cacheKey);
         }
 
-        public void SetNewsItem(NewsModel newsModel)
+        public async void SetNewsItem(NewsModel newsModel)
         {
             var newsFromCache = _cache.Get<List<NewsModel>>("NewsItems");
 
@@ -94,6 +94,9 @@ namespace Beruwala_Mirror.Services
             }
             newsFromCache.Add(newsModel);
             newsFromCache = newsFromCache.OrderByDescending(n => n.DisplayDate).ToList();
+
+          await  _fileUploader.SaveFileAsync("News/NewsItems.json", JsonConvert.SerializeObject(newsFromCache));
+
             _cache.Set<List<NewsModel>>("NewsItems", newsFromCache);
         }
 

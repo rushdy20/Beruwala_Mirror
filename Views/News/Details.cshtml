@@ -1,30 +1,59 @@
 ﻿@model Beruwala_Mirror.Models.News.NewsModel
 
+@{
+    var url = $"http://www.Beruwala-Mirror.com/News/Details/{Model.Id}";
+    var date = Model.CreatedDate.ToString("dd-MM-yyyy");
+    var image = $"{"http://d1j1ye7fpazrcq.cloudfront.net/News/"}{date}/{Model.Id}/{Model.MainImg}";
+}
 
-<div class="card" >
-    <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + Model.MainImg})" class="img-fluid",  alt="...">
+@section Meta
+{
+    <meta property="og:type" content="article" />
+    <meta property="og:title" name="title" content="@Model.Heading" />
+    <meta property="og:description" name="description" content="@Model.ShortBody'" />
+    <meta property="og:image" name="image" content=" @image" />
+
+}
+<script>
+    @*$(document).ready(function () {
+        $('meta[name=title]').attr('content','@Model.Heading ');
+        $('meta[name=url]').attr('content',' @url');
+        $('meta[name=description]').attr('content', '@Model.ShortBody');
+        $('meta[name=image]').attr('content', '@imarge');$
+    });*@
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1427888847418235";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="card">
+    <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + Model.MainImg})" class="img-fluid" , alt="...">
 
     <div class="card-body">
         <h5 class="card-title">@Html.DisplayFor(m => m.Heading)</h5>
         <p class="card-text multiline">@Html.DisplayFor(m => m.NewsBody)</p>
-   
 
-    @if (Model.YouTubLink.Trim().Length > 1)
-    {
-        <div class="margin-15">
-            <iframe width="560" height="315" src=@Model.YouTubLink sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"></iframe>
 
-        </div>
-    }
+        @if (Model.YouTubLink.Trim().Length > 1)
+        {
+            <div class="margin-15">
+                <iframe width="560" height="315" src=@Model.YouTubLink sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"></iframe>
 
-    @foreach (var img in Model.Images.Where(i => i != Model.MainImg))
-    {
-        <div class="row float-left margin-15">
+            </div>
+        }
 
-            <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + img})" class="img-fluid"  alt="...">
+        @foreach (var img in Model.Images.Where(i => i != Model.MainImg))
+        {
+            <div class="row float-left margin-15">
 
-        </div>
-    }
+                <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/" + Model.CreatedDate.ToString("dd-MM-yyyy") + @"/" + Model.Id + @"/" + img})" class="img-fluid" alt="...">
+
+            </div>
+        }
     </div>
     <div class="form-group">
         <small id="emailHelp" class="form-text text-muted">Edited By :   @Model.CreatedBy    On :  @Model.CreatedDate.ToString("dd-MM-yyyy") </small>
@@ -33,12 +62,26 @@
     @if (ViewBag.LoggedIn)
     {
         <div class="form-group">
-            @Html.ActionLink("Edit","News","Admin", new {id =Model.Id}, new {@class = "btn btn-primary" })
+            @Html.ActionLink("Edit", "News", "Admin", new { id = Model.Id }, new { @class = "btn btn-primary" })
         </div>
         <div class="form-group">
-            <small  class="form-text text-muted">No of Visits :   @Model.NumberOfVisits </small>
+            <small class="form-text text-muted">No of Visits :   @Model.NumberOfVisits </small>
         </div>
-   
+
     }
 </div>
+
+<!--<!-- Your like button code -->
+<div class="fb-like"
+     data-href=@url
+     data-width=""
+     data-layout="standard"
+     data-action="like"
+     data-size="small"
+     data-share="true">
+</div>
+
+@*<div class="fb-share-button" data-href=@url></div>*@
+
+
 
