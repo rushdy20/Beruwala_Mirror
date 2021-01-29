@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "email": "Rushdy20@yahoo.co.uk",
+      "password": "password-1",
+      "name":  "Rushdy Najath" 
+    },
+    {
+      "email": "Azmina20@yahoo.co.uk",
+      "password": "password-2",
+      "name": "Azmina Rushdy"
+    }
+  ]
+}

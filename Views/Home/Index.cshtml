@@ -8,23 +8,25 @@
 }
 
 <div class="form-group">
-   
+
     @*<div class="NewNewsFeedSeperator">News @DateTime.Today.ToString("dd-MM-yyyy")</div>*@
 
     @foreach (var item in Model.News)
     {
-        if (countofNewsCard > 0 && item.CreatedDate.ToShortDateString() != lastnewsDate)
-        {
-            if (countofNewsCard % 2 == 1)
+        @*
+            if (countofNewsCard > 0 && item.CreatedDate.ToShortDateString() != lastnewsDate)
             {
-                <div class="row float-left news-card emptyCard">
-                    <div class="card size" style="border: none;"></div>
-                </div>
-            }
-            <div class="row bg-transparent hidden-xs" style="height: 50px; clear: both; "></div>
+                if (countofNewsCard % 2 == 1)
+                {
+                    <div class="row float-left news-card emptyCard">
+                        <div class="card size" style="border: none;"></div>
+                    </div>
+                }
+                <div class="row bg-transparent hidden-xs" style="height: 50px; clear: both; "></div>
 
-        }
-        
+            }
+        *@
+
         if (item.CreatedDate.ToShortDateString() != lastnewsDate)
         {
             countofNewsCard = 0;
@@ -39,9 +41,6 @@
                 @Html.Partial("_NewsCard", item)
             </div>
         </div>
-
-       
-        
     }
 
 </div>
@@ -49,8 +48,8 @@
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/en_US/sdk.js#xfbml=1
-             &version=1
-             &appId=239242753967982
-             &autoLogAppEvents=1"
+                         &version=1
+                         &appId=239242753967982
+                         &autoLogAppEvents=1"
         nonce="FOKrbAYI">
 </script>

@@ -27,30 +27,34 @@
 </head>
 <body>
     <div id="fb-root"></div>
-<div class="header">
-    <nav class="nav navbar-nav navbar-right">
-        <div>
-        </div>
-    </nav>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white  mb-3">
-        <div class="container">
-            <a class="" asp-area="" asp-controller="Home" asp-action="Index"> <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/beruwalaMirrorLogo.jpg"})" class="logo position" style="max-height: 300px; max-width: 50%" alt="..."></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav>
-    <nav class="nav navbar-nav navbar-right">
-    </nav>
-    <div class="bg-white border-bottom box-shadow">
-        <ul class="nav justify-content-center newsCategory">
-            @*<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>*@
+    <div class="header">
+        <nav class="nav navbar-nav navbar-right">
+            <div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white  mb-3">
+            <div class="container">
+                <a class="" asp-area="" asp-controller="Home" asp-action="Index"> <img src="@Url.Action("Thumbnail", "Home", new {filename = "News/beruwalaMirrorLogo.jpg"})" class="logo position" style="max-height: 300px; max-width: 50%" alt="..."></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+        <nav class="nav navbar-nav navbar-right">
+        </nav>
+        <div class="bg-white border-bottom box-shadow">
+            <ul class="nav justify-content-center newsCategory">
+                @*<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>*@
 
-        </ul>
+            </ul>
+        </div>
     </div>
-</div>
-<img src="@Url.Action("Thumbnail", "Home", new {filename = "thumbnail.jfif"})" class="img-fluid wallpaper" , alt="...">
+    @*
+        <div  id="wallpaper" >
+            <img src="@Url.Action("Thumbnail", "Home", new {filename = "thumbnail.jfif"})" class="img-fluid wallpaper " , alt="...">
+        </div>
+    *@
     <div class="row">
         @* <div class="col-1 menu">
                     <ul class="nav justify-content-center newsCategory">
@@ -59,7 +63,7 @@
                 </ul>
             </div>*@
         <div class="col-9 menu padding-left-2p">
-           
+
             @RenderBody()
         </div>
         <div class="col-3 right adverts">
